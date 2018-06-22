@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import 'index_macros.html' as macro %}
+{% block content %}
+	{% if current_user %}
+		<h3>welcome {{ current_user.username }}</h3>
+	{% else%}
+		<h3>Welcome stranger</h3>
+	{% endif %}
+	{% if current_user %}
+		{{wtf.quick_form(form)}}
+	{% endif %}
+	{{ macro.display(pitches)}}
+
+{% endblock %}
