@@ -30,3 +30,19 @@ def login():
 		else:
 			print("unsuccessful")
 	return render_template('auth/login.html', login_form=login_form)
+
+
+
+@auth.route('/register', methods=['GET','POST'])
+def register():
+	"""this function handles registration functionalities"""
+	form = RegistrationForm()
+
+	if form.validate_on_submit():
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+		user = User(username=form.username.data,email=form.email.data,password_hash=hashed_password)
+		db.session.add(user)
+		db.session.commit()
+		flash("invalid arguments", "danger")
+		return redirect(url_for('auth.login'))
+	return render_template('auth/register.html', form=form)
