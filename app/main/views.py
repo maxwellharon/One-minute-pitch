@@ -26,3 +26,22 @@ class IndexView(View):
 
 
 		return render_template(self.template_name,form=form, pitches=pitches)
+
+main.add_url_rule('/', view_func=IndexView.as_view('index', template_name='index.html'),methods=["GET","POST"])
+
+
+class ProfileView(MethodView):
+	decorators=[login_required,]
+
+	def __init__(self,template_name):
+		self.template_name = template_name
+
+
+	def get(self, uname):
+		if uname is None:
+			# pass
+			abort(404)
+		else:
+			self.user = User.query.filter_by(username=uname).first()
+			self.pitches = Pitch.query.filter_by(author_id=self.user.id).all()
+			return render_template(self.template_name, user=self.user,pitches=self.pitches)
