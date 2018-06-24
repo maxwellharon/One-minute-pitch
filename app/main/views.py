@@ -45,3 +45,30 @@ class ProfileView(MethodView):
 			self.user = User.query.filter_by(username=uname).first()
 			self.pitches = Pitch.query.filter_by(author_id=self.user.id).all()
 			return render_template(self.template_name, user=self.user,pitches=self.pitches)
+
+profile_view = ProfileView.as_view('profile',template_name="profile/profile.html")
+main.add_url_rule('/user/<uname>/', view_func=profile_view)
+main.add_url_rule('/user/', defaults={'uname':None}, view_func=profile_view, methods=["GET",])
+
+
+class PitchView(View):
+	decorators=[login_required,]
+
+	def __init__(self,template_name):
+		self.template_name = template_name
+
+	def dispatch_request(self,id):
+		pitch = Pitch.query.get_or_404(id)
+		form = CommentForm()
+		if form.validate_on_submit():
+			comment = Comment(body=form.body.data,pitch=pitch,author=current_user._get_current_object())
+
+			db.session.add(comment)
+			db.session.commit()
+			flash('your comment has been added','success')
+			return redirect(url_for('main.index',id=pitch.id))
+		comments = Comment.query.filter_by(pitch_id=id).all()
+		user = User.query.filter_by(id=Comment.author_id).first()
+
+
+		return render_template(self.template_name,form=form,pitch=pitch,comments=comments,user=user)
