@@ -20,3 +20,24 @@ class User(UserMixin,db.Model):
 
 	def __repr__(self):
 		return f"User : {self.username}"
+
+
+class Pitch(db.Model):
+
+	""" This model handles the Pitch model that will be mapped to the database"""
+
+	__tablename__='pitches'
+	id = db.Column(db.Integer,primary_key=True)
+	author_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+        nullable=False)
+	body = db.Column(db.Text, index=True)
+	timestamp = db.Column(db.DateTime,default=datetime.utcnow)
+	upvotes = db.Column(db.Integer, default=int(0))
+	downvotes = db.Column(db.Integer, default=int(0))
+	category = db.Column(db.String(255), nullable=False)
+	comments = db.relationship('Comment',backref='pitch',lazy='dynamic')
+
+	# vote = db.relationship('Vote',backref='pitch',lazy='dynamic')
+
+	def __repr__(self):
+		return f'User {self.body}'
