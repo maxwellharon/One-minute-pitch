@@ -19,3 +19,8 @@ photos = UploadSet('photos',IMAGES)
 simple = SimpleMDE()
 socketio = SocketIO()
 moment = Moment()
+
+
+login_manager = LoginManager()
+login_manager.session_protection='strong'
+login_manager.login_view = 'auth.login'
