@@ -111,3 +111,21 @@ def delete(id):
 	db.session.delete(pitch)
 	db.session.commit()
 	return redirect(url_for('main.index'))
+
+@main.route('/pitches/all_categories/')
+def categories():
+	pickup = Pitch.query.filter_by(category="pickup lines").all()
+	interview = Pitch.query.filter_by(category="interview pitch").all()
+	product = Pitch.query.filter_by(category="product pitch").all()
+	promotion = Pitch.query.filter_by(category="promotion pitch").all()
+	return render_template('categories.html',pickup=pickup,interview=interview,product=product,promotion=promotion)
+
+@main.route('/pitch/upvote/<int:id>')
+@login_required
+def upvote(id):
+	pitch = Pitch.query.filter_by(id=id).first()
+	pitch.upvotes = pitch.upvotes + 1
+	db.session.add(pitch)
+	db.session.commit()
+
+	return redirect(url_for('main.index'))
