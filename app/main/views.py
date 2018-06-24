@@ -104,3 +104,10 @@ def update_pic(uname):
 		user.profile_pic_path=path
 		db.session.commit()
 	return redirect(url_for('main.profile',uname=uname))
+
+@main.route('/delete/<int:id>')
+def delete(id):
+	pitch = Pitch.query.filter_by(id=id).first()
+	db.session.delete(pitch)
+	db.session.commit()
+	return redirect(url_for('main.index'))
