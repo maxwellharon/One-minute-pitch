@@ -41,3 +41,19 @@ class Pitch(db.Model):
 
 	def __repr__(self):
 		return f'User {self.body}'
+
+
+class Comment(db.Model):
+	""" This model handles the Comment model that will be mapped to the database"""
+
+	__tablename__='comments'
+	id = db.Column(db.Integer,primary_key=True)
+	body = db.Column(db.Text)
+	timestamp=db.Column(db.DateTime,index=True,default=datetime.utcnow)
+	author_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+        nullable=False)
+	pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'),
+        nullable=False)
+
+	def __repr__(self):
+		return f"Comment : id: {self.id} comment: {self.body}"
