@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block content %}
+	{{pitch.body}}
+	{{wtf.quick_form(form)}}
+	<ul>
+		{% if comments %}
+			{% for comment in comments %}
+				<div class="list-group">
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+						<div class="d-flex w-100 justify-content-between">
+							<p class="mb-1">comment id <span class="badge badge-info badge-pill">{{comment.id}}</span></p>
+							<small>posted on {{comment.timestamp.strftime('%Y-%m-%d')}}</small>
+						</div>
+						<h4>{{ comment.body }}</h4>
+						<small> by {{user.username}}.</small>
+					</a>
+				</div>
+			{% endfor %}
+		{% else %}
+			<h3>No comments for this post!!</h3>
+		{% endif %}
+	</ul>
+
+{% endblock %}
