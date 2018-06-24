@@ -5,7 +5,7 @@
 	{% if current_user %}
 		<h3>welcome {{ current_user.username }}</h3>
 	{% else%}
-		<h3>Welcome stranger</h3>
+		<h3>Hello there </h3>
 	{% endif %}
 	{% if current_user %}
 		{{wtf.quick_form(form)}}
