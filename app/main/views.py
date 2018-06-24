@@ -72,3 +72,23 @@ class PitchView(View):
 
 
 		return render_template(self.template_name,form=form,pitch=pitch,comments=comments,user=user)
+
+main.add_url_rule('/pitch/<int:id>/', view_func=PitchView.as_view('pitch', template_name='pitch.html'),methods=["GET","POST"])
+
+
+@main.route('/user/<uname>/update',methods=['GET','POST'])
+@login_required
+def update_profile(uname):
+	user = User.query.filter_by(username=uname).first()
+	if user is None:
+		abort(404)
+
+	form = UpdateProfile()
+	if form.validate_on_submit():
+		user.bio = form.bio.data
+
+		db.session.add(user)
+		db.session.commit()
+
+		return redirect(url_for('main.profile',uname=user.username))
+	return render_template('profile/update.html', form=form)
