@@ -1,7 +1,8 @@
 import os
 
 class Config:
-	SECRET_KEY = os.environ.get('SECRET_KEY')
+	# SECRET_KEY = os.environ.get('17dc65f0ff74785949903bf317fe8ef2')
+	SECRET_KEY = '17dc65f0ff74785949903bf317fe8ef2'
 	# secret
 	SQLALCHEMY_TRACK_MODIFICATIONS=True
 	SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
@@ -12,8 +13,8 @@ class Config:
 	MAIL_SERVER = 'smtp.google.cpm'
 	MAIL_PORT = 587
 	MAIL_USE_TLS = True
-	MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-	MAIL_PASSWORD = os.environ.get("MAIL.PASSWORD")
+	MAIL_USERNAME = os.environ.get('maxwellharon54@gmail.com')
+	MAIL_PASSWORD = os.environ.get("mustangBEAST7")
 
 
 	# simple mde configurations

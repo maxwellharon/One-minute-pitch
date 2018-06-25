@@ -14,7 +14,7 @@ def load_user(user_id):
 	return User.query.get(user_id)
 
 
-@auth.route('/login',methods=['GET','POST'])
+@auth.route('/login',methods=['GET' , 'POST'])
 def login():
 
 	"""this function handles login functionalities"""
