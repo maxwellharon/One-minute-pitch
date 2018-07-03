@@ -1,33 +1,40 @@
-from flask_migrate import Migrate,MigrateCommand
+from app import create_app,db
 from flask_script import Manager,Server
+# Connect to models
+from app.models import User, Role, Category, Pitch, Comment
+# Set up migrations
+from flask_migrate import Migrate,MigrateCommand
 
-#local imports
-from app import db,socketio
-from app import create_app
+# Creating app instance
+# app = create_app('test')
+# app = create_app('development')
+app = create_app('development')
 
-from app.models import *
-from config import *
 
-app = create_app('production')
-
-# manager commands
+# Create manager instance
 manager = Manager(app)
+
+# Create migrate instance
 migrate = Migrate(app,db)
 
-# manager functionalities
+manager.add_command('server',Server)
 manager.add_command('db',MigrateCommand)
-manager.add_command('runserver',Server)
 
-# for shell functionalities.
-@manager.shell
-def make_shell_context():
-	return dict(app=app,db=db)
-
-# testing settings.
 @manager.command
 def test():
-	import unittest
-	tests = unittest.TestLoader().discover("tests")
-	unittest.TextTestRunner(verbosity=2).run(tests)
+    '''
+    Run the unit tests
+    '''
+    import unittest
+    tests = unittest.TestLoader().discover('tests')
+    unittest.TextTestRunner(verbosity=2).run(tests)
+
+
+@manager.shell
+def make_shell_context():
+    return dict( app=app, db=db, User=User, Role=Role, Category=Category, Pitch=Pitch, Comment=Comment)
+
+
 if __name__ == '__main__':
-	manager.run()
+    app.secret_key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+    manager.run()

@@ -1,59 +1,103 @@
-from flask_login import UserMixin
 from . import db
-from datetime import datetime
+from flask_login import UserMixin
+from . import login_manager
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class User(UserMixin,db.Model):
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255))
+    email = db.Column(db.String(255), unique=True, index=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    bio = db.Column(db.String(255))
+    profile_pic_path = db.Column(db.String())
+    password_hash = db.Column(db.String(255))
+    pitches = db.relationship('Pitch', backref='user', lazy='dynamic')
+    comments = db.relationship('Comment', backref='user', lazy='dynamic')
 
-	""" This model handles the User model that will be mapped to the database"""
+    def __repr__(self):
+        return f'User{self.username}'
 
-	__tablename__="users"
-	id = db.Column(db.Integer,primary_key=True)
-	username = db.Column(db.String(255),index=True)
-	email = db.Column(db.String(255), unique=True,index=True)
-	bio = db.Column(db.String(255))
-	profile_pic_path=db.Column(db.String())
-	joined = db.Column(db.DateTime,default=datetime.utcnow)
-	password_hash = db.Column(db.String(255))
-	pitch = db.relationship('Pitch',backref='author',lazy='dynamic')
-	comments = db.relationship('Comment',backref='author',lazy='dynamic')
+    pass_secure = db.Column(db.String(255))
 
-	def __repr__(self):
-		return f"User : {self.username}"
+    @property
+    def password(self):
+        raise AttributeError('You cannot read the password attribute')
 
+    @password.setter
+    def password(self, password):
+        self.pass_secure = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.pass_secure, password)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    users = db.relationship('User', backref='role', lazy='dynamic')
+
+    def __repr__(self):
+        return f'User{self.name}'
+
+class Category(db.Model):
+    __tablename__ = 'categories'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    pitches = db.relationship('Pitch', backref='category', lazy='dynamic')
+    # comments = db.relationship('Comment', backref='user', lazy='dynamic')
+
+    def save_category(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_categories(cls):
+        categories = Category.query.all()
+        return categories
 
 class Pitch(db.Model):
+    __tablename__ = 'pitches'
+    id = db.Column(db.Integer, primary_key=True)
+    pitch = db.Column(db.String(255))
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    comments = db.relationship('Comment', backref='pitch', lazy='dynamic')
 
-	""" This model handles the Pitch model that will be mapped to the database"""
+    def save_pitch(self):
+        db.session.add(self)
+        db.session.commit()
 
-	__tablename__='pitches'
-	id = db.Column(db.Integer,primary_key=True)
-	author_id = db.Column(db.Integer, db.ForeignKey('users.id'),
-        nullable=False)
-	body = db.Column(db.Text, index=True)
-	timestamp = db.Column(db.DateTime,default=datetime.utcnow)
-	upvotes = db.Column(db.Integer, default=int(0))
-	downvotes = db.Column(db.Integer, default=int(0))
-	category = db.Column(db.String(255), nullable=False)
-	comments = db.relationship('Comment',backref='pitch',lazy='dynamic')
+    @classmethod
+    def get_pitches(cls, category_id):
+        pitches = Pitch.query.order_by(Pitch.id.desc()).filter_by(category_id=category_id).all()
 
-	# vote = db.relationship('Vote',backref='pitch',lazy='dynamic')
-
-	def __repr__(self):
-		return f'User {self.body}'
+        return pitches
 
 
 class Comment(db.Model):
-	""" This model handles the Comment model that will be mapped to the database"""
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(255))
+    pitch_id = db.Column(db.Integer, db.ForeignKey("pitches.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
-	__tablename__='comments'
-	id = db.Column(db.Integer,primary_key=True)
-	body = db.Column(db.Text)
-	timestamp=db.Column(db.DateTime,index=True,default=datetime.utcnow)
-	author_id = db.Column(db.Integer, db.ForeignKey('users.id'),
-        nullable=False)
-	pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'),
-        nullable=False)
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
 
-	def __repr__(self):
-		return f"Comment : id: {self.id} comment: {self.body}"
+    @classmethod
+    def get_comments(cls, pitch_id):
+        comments = Comment.query.order_by(Comment.id.desc()).filter_by(pitch_id=pitch_id).all()
+
+        return comments
+
+
+
+

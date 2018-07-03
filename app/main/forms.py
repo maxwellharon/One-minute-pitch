@@ -1,22 +1,27 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField,BooleanField,SubmitField,TextAreaField,RadioField
-from wtforms.validators import Required,Email,EqualTo
-from wtforms import ValidationError
-# from ..models import User
+from wtforms import StringField,TextAreaField,SubmitField
+from wtforms.validators import Required
 
 
-class UpdateProfile(FlaskForm):
-	bio = TextAreaField("Tell us about you.", validators=[Required()])
-	submit = SubmitField('submit')
+class CategoryForm(FlaskForm):
+    """
+    class to create a form to create category
+    """
+    name = StringField('Pitch Category',validators=[Required()])
+    submit = SubmitField('Create')
 
 
 class PitchForm(FlaskForm):
-	body = TextAreaField("whats your pitch ?",validators=[Required()])
-	category = RadioField('Label', choices=[('pickup lines','pickup lines'), ('interview pitch','interview pitch'),('product pitch','product pitch'),('promotion pitch','promotion pitch')])
-	submit = SubmitField('Submit')
-
+    """
+    class to create form to write pitch
+    """
+    pitch = StringField('Pitch Content', validators=[Required()])
+    submit = SubmitField('Submit')
 
 
 class CommentForm(FlaskForm):
-	body = TextAreaField('',validators=[Required()])
-	submit = SubmitField()
+    """
+    class to create form to comment on a pitch
+    """
+    comment = StringField('Comment Content', validators=[Required()])
+    submit = SubmitField('Submit')

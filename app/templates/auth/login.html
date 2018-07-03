@@ -1,12 +1,34 @@
-{% extends 'profile/main.html'%}
+{% extends 'base.html'%}
 {% import 'bootstrap/wtf.html' as wtf%}
 
-{% block content %}
-<div class="col-md-4"> </div>
-<div class="col-md-4">
+{% block content%}
 
-  {{wtf.quick_form(login_form)}}
+<div class="container-fluid">
+ <div class="row">
+
+   <div class="col-md-2"> </div>
+
+   <div class="col-md-8">
+     <!-- Flash message -->
+     {% for message in get_flashed_messages() %}
+         <div >
+         <button >&times;</button>
+         {{ message }}
+         </div>
+
+     {% endfor %}
+     <!-- Login form  -->
+
+     {{ wtf.quick_form(login_form) }}
+
+     <!-- <p> Don't  have an account?  <a href="{{url_for('auth.register')}}">Sign up here</a></p> -->
+
+   </div>
+
+   <div class="col-md-2"> </div>
 
  </div>
+</div>
 
-{% endblock%}
+
+{%endblock%}
