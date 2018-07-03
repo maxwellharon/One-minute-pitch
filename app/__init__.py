@@ -1,67 +1,48 @@
 from flask import Flask
+from flask_bootstrap import Bootstrap
 from config import config_options
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_bootstrap import Bootstrap
-from flask_bcrypt import Bcrypt
-from flask_uploads import UploadSet,configure_uploads,IMAGES
-from flask_simplemde import SimpleMDE
-from flask_socketio import SocketIO ,send
-from flask_moment import Moment
 
 
-# instance of the database
-db = SQLAlchemy()
-bootstrap = Bootstrap()
-bcrypt=Bcrypt()
-photos = UploadSet('photos',IMAGES)
 
-simple = SimpleMDE()
-socketio = SocketIO()
-moment = Moment()
-
-
+# Instances of flask extensions
+# Instance of LoginManger and using its methods
 login_manager = LoginManager()
-login_manager.session_protection='strong'
+login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+bootstrap = Bootstrap()
 
+
+db = SQLAlchemy()
 
 def create_app(config_name):
-	"""this function initializes the app when called from manage.py file"""
+    '''
+    Function that takes configuration setting key as an argument
 
-	app = Flask(__name__)
-	app.config.from_object(config_options[config_name])
+    Args:
+        config_name : name of the configuration to be used
+    '''
 
-	# database initialization
-	db.init_app(app)
+    # Initialising application
+    app = Flask(__name__)
 
-	# bootstrap
-	bootstrap.init_app(app)
+    # Creating the app configurations
+    app.config.from_object(config_options[config_name])
 
-	# bcrypt
-	bcrypt.init_app(app)
+    # Initialising flask extensions
+    bootstrap.init_app(app)
+    db.init_app(app)
+    login_manager.init_app(app)
 
-	# login
-	login_manager.init_app(app)
+    # Regestering the main blueprint
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
 
-	# blueprints
-	from .auth import auth as auth_blueprint
-	app.register_blueprint(auth_blueprint,url_prefix='/authenticate')
+    # Regestering the auth bluprint
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-	# photos configurations
-	configure_uploads(app,photos)
 
-    #simple markdown initialization
-	simple.init_app(app)
-
-	#socketio initialization
-	socketio.init_app(app)
-
-	#flask moment initialization
-	moment.init_app(app)
-
-	# import and register blueprints
-	from .main import main as main_blueprint
-	app.register_blueprint(main_blueprint)
-
-	return app
+    return app
