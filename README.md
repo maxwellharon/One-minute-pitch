@@ -1,25 +1,42 @@
-# One-minute-pitch
-## Maxwell Haron
-#### The One-minute-pitch is a Flask based application that allows users to present their pitches on the site in order to market themselves.The One-minute-Pitch allows users to create an account and login and make a pitch,upvote or downvote a pitch etc...
-#### The live link to the One-minute-Pitch is :
- 24th June 2018 2.32am
-#### By **Maxwell Haron**
-## Installation Requirements
-* A web browser
-* A virtual environment
-* Flask
-* Internet connection
-* Terminal if you want to access the app locally through your computer
+# THE PITCH APP
 
-####
-#### Installation
-* Clone,download or fork the the app from this link
-* Install a virtual environment in your project folder by running the following commands `$sudo apt-get install python3.6-venv` and `$ python3.6 -m venv virtual`.To activate the virtual environment run `$ source virtual/bin/activate`
-* To install Flask,run the following command `$ source virtual/bin/activate` then `python3.6 -m pip install flask`
-* In the terminal,run the app by running the following command `python3 manage.py runserver`
-* Run the command ng-serve to allow the app to be hosted by a local server and run.
-* Go to your browser and open the link http://127.0.0.1:5000 or http:///localhost:5000**
-* Enjoy the App :-)...
+ The Pitch app App allows a user to be registered members of the app so that they can post pitches and other users can comment on them, downvote and upvote.
+#### By **Derrick** created on, May 19th 2018 
+
+## Description
+This Application is python based and runs on any browser, It allows a user to be registered members of the app so that they can post pitches and other users can comment on them, downvote and upvote and view the various pitch categories eg promotion and pickup lines. Anonymous users can only view categories but cannot comment on them.
+
+## Behaviour of the application
+
+### Development and Setup.
+### prerequisites
++ First clone the project to your camputer. ```git clone <repo url>```
++ Ensure python3 is installed.
++ Install virtual environment by running ```pip3 install virtualenv```
++ Create a virtualenvironment by running ``` virtualenv <name of environment>``` on the terminal and once its activated by running ``` source <name of environment>/bin/activate``` then install all the packages by running ```pip3 install -r requirements.txt```
++ Then start the server by running ```python3 manage.py runserver```.
++ Copy the link and paste in any browser ```http://localhost:5000```
+
+## Authentication
+
++ Once the url is entered the user is welcomed to the app and redirected to the registration and login form. 
+- If the user is anonymouse, He/she can only view the categories and can't vote or comment.
+- If the user on the the other hand is Authnticated but logged out, can login again to interact with the app by entering email and password details into a form.
+- The user last option is to register using a unique username and a password after which the user is redirected to login to the app.
+- Once the user is authenticated, can logout at will.
+
+## Pitches.
+
++ The user Can add pitches and they get displayed from the most resent one.
++ The user can upvote,downvote and comment on a pitch.
++ The pitch information is displayed alongside other pitches, a pitch contains information such as pitch body, pithch author, downvotes,upvotes and total vote count.
++ The user can click the author of the pitch to view all their information such as their bio, profile picture and all their pitches.
+
+## Categories
+
++ The pitches are categorized as punchline, product, intrview and promotion pitches.
++ The user can view all these categories whether authenticated or not.
+
 
 ### Important packages used in app development.
 
@@ -41,33 +58,18 @@ visitor==0.1.3
 Werkzeug==0.14.1
 
 ```
+## Technology Used
++ Python3.6
 
-## Categories
+## Test Driven Development
+Testing was done using python inbuild test tool called **unittest** to test database and form models.
 
-+ The pitches are categorized as punchline, product, intrview and promotion pitches.
-+ The user can view all these categories whether authenticated or not.
-
-## One-Minute-Pitch Specifications.
-
-+ The user Can add pitches and they get displayed from the most resent one.
-+ The user can upvote,downvote and comment on a pitch.
-+ The pitch information is displayed alongside other pitches, a pitch contains information such as pitch body, pithch author, downvotes,upvotes and total vote count.
-+ The user can click the author of the pitch to view all their information such as their bio, profile picture and all their pitches.
-
-## Known Bugs and Development
-* If you run the application in any version of python lower than 3.5.6 you will experiece errors...Alot of them
+## Bugs and Development.
 + SQL errors especially when the user deletes a post.
-## Technologies Used
-* python3
-* Flask
-* Jinja
-* HTML
-* Bootstrap
-* css
 
 
-## Support and contact details
-If you have any queries regarding the One-minute-pitch,Please feel free to contact #TeamOne-minute-pitch through maxwellharon54@gmail.com and we will behappy to look into your query
+## Further help
+To get Further help you can visit the official [python](https://www.python.org/) and [flask](http://flask.pocoo.org/ ) documentation.
 
-## License
-MIT (c) 2018
+## Licence
+MIT (c) 2017 [muriithi derrick](https://github.com/muriithiderro)
