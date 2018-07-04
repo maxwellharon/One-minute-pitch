@@ -36,6 +36,8 @@ class DevConfig(Config):
     '''
 
     DEBUG = True
+    # class ProdConfig(Config):
+    # SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
 
 
 config_options = {
